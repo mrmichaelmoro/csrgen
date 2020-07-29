@@ -1,0 +1,21 @@
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = req_distinguished_name
+ 
+[req_distinguished_name]
+countryName = <YOUR COUNTRY HERE>
+stateOrProvinceName = <YOUR STATE HERE>
+localityName = <YOUR CITY HERE>
+organizationName = <YOUR COMPANY OR ORG NAME>
+organizationalUnitName = <YOUR GROUP HERE>
+commonName = www.domain.com
+ 
+[req_ext]
+subjectAltName = @alt_names
+ 
+[alt_names]
+DNS.1 = domain.com
+
