@@ -30,7 +30,7 @@ else
 fi
 
 # Checks for existance of RootCA file.
-if [ ! -f $ROOT_CA ]; then
+if [[ ! -f $ROOT_CA  && "$ROOT_CA" != "self" ]]; then
 	echo
 	echo "[ ERROR ]: Root CA file '$ROOT_CA' not found"
 	echo
@@ -43,7 +43,7 @@ CERTNAME=$1
 PRIVATE_KEY=$CERTNAME.pem
 CERT_FILE=$CERTNAME.crt
 ALT_CERT_FILE=`echo $CERTNAME | sed 's/\./\_/g'`".crt"
-PFXOUT=$CERTNAME.pfxt
+PFXOUT=$CERTNAME.pfx
 
 # Generates a random password for PFX signing
 PFXPASS=`openssl rand -base64 10`
@@ -63,7 +63,12 @@ else
 fi
 
 # openssl command to export to PKCS12
-openssl pkcs12 -export -out $PFXOUT -inkey $PRIVATE_KEY -in $ORIG_CERT -certfile $ROOT_CA -password pass:$PFXPASS
+
+if [ "$ROOT_CA" != "self" ]; then
+	openssl pkcs12 -export -out $PFXOUT -inkey $PRIVATE_KEY -in $ORIG_CERT -certfile $ROOT_CA -password pass:$PFXPASS
+else
+	openssl pkcs12 -export -out $PFXOUT -inkey $PRIVATE_KEY -in $ORIG_CERT -password pass:$PFXPASS
+fi
 
 # Checks if the file was generated and not ZERO size
 if [[ ! -f $PFXOUT || -s $PFXPASS ]]; then
