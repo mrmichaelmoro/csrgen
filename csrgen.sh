@@ -23,11 +23,13 @@ if [ ! -f ssl.cf ]; then
         echo
         exit
 else
-	grep $CERTNAME ssl.cf > /dev/null
-	if [ $? -ne 0 ]; then
-		echo "[ ERROR ]: Configuration file is not configured for requested domain. Exiting..."
-		echo
-		exit
+	if [[ "$CERTNAME" != "wildcard"* ]]; then
+		grep $CERTNAME ssl.cf > /dev/null
+		if [ $? -ne 0 ]; then
+			echo "[ ERROR ]: Configuration file is not configured for requested domain. Exiting..."
+			echo
+			exit
+		fi
 	fi
 fi
 
